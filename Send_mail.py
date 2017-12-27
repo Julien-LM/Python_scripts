@@ -15,8 +15,8 @@ class Mail(object):
         self.server.starttls()
         self.server.login("py.sys.info@gmail.com", os.getenv('GMAIL_PASS', None))
 
-    def send_mail(self, msg="Empty message..."):
-        self.server.sendmail("py.sys.info@gmail.com", "julien.lemellec@gmail.com", msg)
+    def send_mail(self, msg="Empty message...", recipient="julien.lemellec@gmail.com"):
+        self.server.sendmail("py.sys.info@gmail.com", recipient, msg)
 
     def __del__(self):
         self.server.quit()
@@ -24,13 +24,16 @@ class Mail(object):
 
 if __name__ == "__main__":
     message = "Empty..."
+    recipient = "julien.lemellec@gmail.com"
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "m:", ["message="])
+        opts, args = getopt.getopt(sys.argv[1:], "m:r:", ["message=", "recipient="])
     except getopt.GetoptError:
         print "Wrong argument..."
         sys.exit(1)
     for opt, arg in opts:
         if opt == '-m' or opt == '--message':
             message = arg
+        elif opt == '-r' or opt == '--recipient':
+            recipient = arg
 
-    Mail().send_mail(message)
+    Mail().send_mail(message, recipient)
